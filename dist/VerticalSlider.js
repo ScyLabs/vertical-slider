@@ -1,7 +1,7 @@
 "use strict";
 
 (function () {
-  this.VerticalSlider = function (element, opts) {
+  window.VerticalSlider = function (element, opts) {
     var _this2 = this;
 
     this.slides = new Array();
@@ -12,14 +12,9 @@
       offset: 0,
       delay: 2000,
       duration: 1000,
-      animationDelay: 0
+      rootMargin: '-20%'
     };
     var scrollIndex = 0;
-    var observerOpts = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 1.0
-    };
 
     if (opts === undefined) {
       opts = {};
@@ -28,16 +23,23 @@
     init.call(this, element, opts);
     setDefaults.call(this, defaults, opts);
     configure.call(this, opts);
+    var observerOpts = {
+      rootMargin: this.rootMargin
+    };
 
     var insersectionCallBack = function insersectionCallBack(element) {
       if ((element.getAttribute('data-index') == 0 || element.getAttribute('data-index') == _this2.slides.length - 1) && !_this2.scrollLocked) {
         var _this = _this2;
         _this2.activeSlide = element;
+        _this2.wheelLocked = false;
 
         _this2.activeSlide.classList.add('active');
 
         scrollIndex = element.offsetTop;
         toggleScrollState();
+        $('html,body').animate({
+          scrollTop: _this.activeSlide.offsetTop + _this.offset
+        }, _this.duration);
 
         var wheelCallback = function wheelCallback(e) {
           var delta = (e.deltaY || -e.wheelDelta || e.detail) >> 10 || 1;
@@ -53,6 +55,10 @@
           }
 
           if (null === nextSlide) {
+            _this.wheelLocked = true;
+            $('html,body').animate({
+              scrollTop: _this.activeSlide.offsetTop + $(_this.activeSlide).innerHeight() * (delta < 0 ? -1 : 1) + _this.offset
+            }, _this.duration);
             document.removeEventListener('wheel', wheelCallback);
             toggleScrollState();
             return;
@@ -114,7 +120,7 @@
         var _this4 = this;
 
         entries.forEach(function (entry) {
-          if (entry.intersectionRatio == 1.0) {
+          if (entry.isIntersecting) {
             var slide = entry.target;
             insersectionCallBack.call(_this4, slide);
           }
@@ -159,3 +165,6 @@
     }
   };
 })();
+
+var slides = document.querySelectorAll('.slide');
+var slider = new VerticalSlider(slides, {});

@@ -1,6 +1,6 @@
 # VerticalSlider
 
-VerticalSlider is a verticalSlider
+Vertical scroll-blocker slider
 
 
 ## Usage
@@ -11,12 +11,12 @@ VerticalSlider is a verticalSlider
 ```
 ### Initialize VerticalSlider object
 ```javascript
-var slides = document.getQuerySelectorAll('.slide');
+var slides = document.querySelectorAll('.slide');
 var options = {
   offset: 0,
   delay: 2000,
   duration: 1000,
-  animationDelay: 0
+  rootMargin: "-20%"
 };
 var verticalSlider = new VerticalSlider(slides,options);
 ```    

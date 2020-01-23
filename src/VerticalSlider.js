@@ -1,50 +1,57 @@
 (function(){
 
-    this.VerticalSlider = function(element,opts) {
+    window.VerticalSlider = function(element,opts) {
       
-      this.slides = new Array();
+      this.slides = new Array()
      
-      this.scrollLocked = false;
-      this.activeSlide = null;
+      this.scrollLocked = false
+      this.activeSlide = null
       
-      this.wheelLocked = false;
+      this.wheelLocked = false
       
       
       var defaults = {
         offset: 0,
         delay : 2000,
         duration: 1000,
-        animationDelay: 0
+        rootMargin: '-20%'
       }
       
       var scrollIndex = 0
   
       
-      var observerOpts = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 1.0
-      }
+  
       if(opts === undefined){
         opts = {}
       }
       init.call(this,element,opts)
       setDefaults.call(this,defaults,opts)
-      configure.call(this,opts);
+      configure.call(this,opts)
+      
+      var observerOpts = {
+        rootMargin: this.rootMargin,
+      }
       
       var insersectionCallBack = (element) => {
         if((element.getAttribute('data-index') == 0 || element.getAttribute('data-index') == this.slides.length - 1) && !this.scrollLocked){
-          var _this = this;
+          var _this = this
           
-          this.activeSlide = element;
+          this.activeSlide = element
+          this.wheelLocked = false
+          
           this.activeSlide.classList.add('active')
-          scrollIndex = element.offsetTop;
-          toggleScrollState();
+          scrollIndex = element.offsetTop
+          toggleScrollState()
+          
+          $('html,body').animate({
+            scrollTop: _this.activeSlide.offsetTop + _this.offset
+          }, _this.duration)
+          
           var wheelCallback = (e) => {
             var delta = ((e.deltaY || -e.wheelDelta || e.detail) >> 10) || 1;
             if(_this.wheelLocked)
               return;
-            var nextSlide = null;
+            var nextSlide = null
             
             if(delta > 0){
               var nextIndex = parseInt(_this.activeSlide.getAttribute('data-index')) + 1
@@ -53,10 +60,14 @@
               var nextIndex = parseInt(_this.activeSlide.getAttribute('data-index') -1)
               var nextSlide = (nextIndex === -1) ? null : _this.slides[nextIndex]
             }
-            if(null === nextSlide){
-                document.removeEventListener('wheel',wheelCallback)
-                toggleScrollState()              
-              return
+            if(null === nextSlide){ 
+                _this.wheelLocked = true
+                $('html,body').animate({
+                  scrollTop: _this.activeSlide.offsetTop + ($(_this.activeSlide).innerHeight() * ((delta < 0) ? -1 : 1 ) ) + _this.offset
+                }, _this.duration)
+                document.removeEventListener('wheel', wheelCallback)
+                toggleScrollState()
+                return
             }
             
             
@@ -64,7 +75,6 @@
               scrollTop: nextSlide.offsetTop + _this.offset
             },_this.duration)
          
-            
   
             scrollIndex = nextSlide.offsetTop
             _this.activeSlide.classList.remove('active')
@@ -72,9 +82,10 @@
             setTimeout(function(){
               nextSlide.classList.add('active')  
             },_this.duration)
+            
             _this.activeSlide = nextSlide
-          
             _this.wheelLocked = true
+            
             setTimeout(function(){
               _this.wheelLocked = false
               
@@ -117,7 +128,7 @@
         })
         this.Observer = new IntersectionObserver(function(entries,observer){
           entries.forEach(entry => {
-            if(entry.intersectionRatio == 1.0){
+            if(entry.isIntersecting){
               var slide = entry.target
               insersectionCallBack.call(this,slide)
   
@@ -162,4 +173,8 @@
        
     }
    
-  })()  
+  })()
+  
+  var slides = document.querySelectorAll('.slide')
+  var slider = new VerticalSlider(slides,{
+  })
