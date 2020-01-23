@@ -165,6 +165,3 @@
     }
   };
 })();
-
-var slides = document.querySelectorAll('.slide');
-var slider = new VerticalSlider(slides, {});
