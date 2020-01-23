@@ -34,7 +34,7 @@
         _this2.activeSlide.classList.add('active');
 
         scrollIndex = element.offsetTop;
-        toggleScrollState();
+        toggleScrollState.call(_this);
         $('html,body').animate({
           scrollTop: _this.activeSlide.offsetTop + _this.offset
         }, _this.duration);
@@ -58,7 +58,7 @@
               scrollTop: _this.activeSlide.offsetTop + $(_this.activeSlide).innerHeight() * (delta < 0 ? -1 : 1) + _this.offset
             }, _this.duration);
             document.removeEventListener('wheel', wheelCallback);
-            toggleScrollState();
+            toggleScrollState.call(_this);
             return;
           }
 
@@ -98,7 +98,7 @@
         var _self = this;
 
         setTimeout(function () {
-          _self.wheelLocked;
+          _self.wheelLocked = false;
         }, _self.delay);
         this.scrollLocked = true;
         document.addEventListener('scroll', scrollCallback);

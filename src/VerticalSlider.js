@@ -41,16 +41,16 @@
           
           this.activeSlide.classList.add('active')
           scrollIndex = element.offsetTop
-          toggleScrollState()
+          toggleScrollState.call(_this)
           
           $('html,body').animate({
             scrollTop: _this.activeSlide.offsetTop + _this.offset
           }, _this.duration)
           
           var wheelCallback = (e) => {
-            var delta = ((e.deltaY || -e.wheelDelta || e.detail) >> 10) || 1;
+            var delta = ((e.deltaY || -e.wheelDelta || e.detail) >> 10) || 1
             if(_this.wheelLocked)
-              return;
+              return
             var nextSlide = null
             
             if(delta > 0){
@@ -66,7 +66,7 @@
                   scrollTop: _this.activeSlide.offsetTop + ($(_this.activeSlide).innerHeight() * ((delta < 0) ? -1 : 1 ) ) + _this.offset
                 }, _this.duration)
                 document.removeEventListener('wheel', wheelCallback)
-                toggleScrollState()
+                toggleScrollState.call(_this)
                 return
             }
             
@@ -95,7 +95,7 @@
           document.addEventListener('wheel',wheelCallback)
         }
       }    
-      var _self = this;
+      var _self = this
       var scrollCallback = (e) => {
         
         window.scrollTo(0,scrollIndex + _self.offset)
@@ -109,10 +109,10 @@
       function toggleScrollState(){
    
         if(!this.scrollLocked){
-          this.wheelLocked = true;
-          var _self = this;
+          this.wheelLocked = true
+          var _self = this
           setTimeout(() => {
-            _self.wheelLocked
+            _self.wheelLocked = false
           },_self.delay)
           this.scrollLocked = true
           document.addEventListener('scroll',scrollCallback)
@@ -156,9 +156,9 @@
       function has(key){
         for(var _key in this){
           if(_key === key)
-            return true;
+            return true
         }
-        return false;
+        return false
       }
        /* Configure object with options */
       function configure(opts){ 
