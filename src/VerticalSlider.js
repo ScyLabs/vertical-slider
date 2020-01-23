@@ -113,7 +113,7 @@
           var _self = this;
           setTimeout(() => {
             _self.wheelLocked
-          },this.delay)
+          },_self.delay)
           this.scrollLocked = true
           document.addEventListener('scroll',scrollCallback)
         } else{
