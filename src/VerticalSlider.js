@@ -1,6 +1,6 @@
 (function(){
 
-    window.VerticalSlider = function(element,opts) {
+    this.VerticalSlider = function(element,opts) {
       
       this.slides = new Array()
      
@@ -113,7 +113,7 @@
           var _self = this;
           setTimeout(() => {
             _self.wheelLocked
-          },2000)
+          },this.delay)
           this.scrollLocked = true
           document.addEventListener('scroll',scrollCallback)
         } else{
@@ -174,7 +174,3 @@
     }
    
   })()
-  
-  var slides = document.querySelectorAll('.slide')
-  var slider = new VerticalSlider(slides,{
-  })

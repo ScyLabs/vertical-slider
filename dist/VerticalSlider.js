@@ -1,7 +1,5 @@
-"use strict";
-
 (function () {
-  window.VerticalSlider = function (element, opts) {
+  this.VerticalSlider = function (element, opts) {
     var _this2 = this;
 
     this.slides = new Array();
@@ -101,7 +99,7 @@
 
         setTimeout(function () {
           _self.wheelLocked;
-        }, 2000);
+        }, this.delay);
         this.scrollLocked = true;
         document.addEventListener('scroll', scrollCallback);
       } else {
@@ -165,6 +163,3 @@
     }
   };
 })();
-
-var slides = document.querySelectorAll('.slide');
-var slider = new VerticalSlider(slides, {});
